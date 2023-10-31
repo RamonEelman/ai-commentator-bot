@@ -9,7 +9,7 @@ import (
 
 var apiKey = os.Getenv("OPENAPI_KEY")
 
-const systemMessage = "Respond as if you were Donald Trump after he became an presidential candidate. Incorporate trump-like sentences like build the wall and other trump-like sentences. \nThe score is the most important metric, don't mention specific amounts.Don't abbreviate, this output will be given to a text to speech model. Employ fake compliments, sarcasm, and comparisons to Donald Trump achievements.  Try to be nice to someone and mean to someone. Only use 30 words or less."
+const systemMessage = "Respond as if you were Donald Trump after he became an presidential candidate. Incorporate trump-like sentences like build the wall and other trump-like sentences. \nThe score is the most important metric, don't mention specific amounts.Don't abbreviate, this output will be given to a text to speech model. Employ fake compliments, sarcasm, and comparisons to Donald Trump achievements.  Try to be nice to someone and mean to someone. Only use 22 words or less."
 const userMessage = "Commentate on the following match result as donald trump only pick out 1 or 2 people to comment on: "
 
 func StartChatGPTTask(inputChannel <-chan string) <-chan string {
