@@ -11,11 +11,11 @@ type AiCommentatorConfig struct {
 }
 
 func initConfig() *AiCommentatorConfig {
-	token, isAvailable := os.LookupEnv("discordToken")
+	token, isAvailable := os.LookupEnv("DISCORD_TOKEN")
 	if !isAvailable {
 		log.Fatal("Could not find env variable discordToken")
 	}
-	guildId, isAvailable := os.LookupEnv("guildId")
+	guildId, isAvailable := os.LookupEnv("GUILD_ID")
 	if !isAvailable {
 		log.Fatal("Could not find env variable guildId")
 	}

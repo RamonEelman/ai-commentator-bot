@@ -6,8 +6,9 @@ import (
 )
 
 type VoiceEvent struct {
-	eventType VoiceEventType
-	channelId string
+	eventType    VoiceEventType
+	channelId    string
+	voiceMessage chan []byte
 }
 
 type VoiceEventType = int8
@@ -18,10 +19,11 @@ const (
 	PlaySound  VoiceEventType = 2
 )
 
-func RunVoiceEventHandler(events chan VoiceEvent, session *discordgo.Session, config *AiCommentatorConfig) {
+func RunVoiceEventHandler(session *discordgo.Session, config *AiCommentatorConfig) chan VoiceEvent {
 	state := &State{
 		isConnected: false,
 	}
+	events := make(chan VoiceEvent, 4)
 	go func() {
 		for {
 			event := <-events
@@ -31,14 +33,31 @@ func RunVoiceEventHandler(events chan VoiceEvent, session *discordgo.Session, co
 			case event.eventType == Disconnect:
 				disconnectFromVoice(state)
 			case event.eventType == PlaySound:
-				playSound()
+				if state.isConnected {
+					playSound(state, event.voiceMessage)
+				} else {
+					drainToVoid(event.voiceMessage)
+				}
 			}
 		}
 	}()
+	return events
 }
 
-func playSound() {
-	// to Do play sound
+func drainToVoid(channel chan []byte) {
+	for _ = range channel {
+	}
+}
+
+func playSound(session *State, channel chan []byte) {
+	drainChannelBlocking(channel, session.connection.OpusSend)
+}
+
+func drainChannelBlocking(src <-chan []byte, dst chan<- []byte) {
+	// Read from the source channel and write into the destination channel
+	for chunk := range src {
+		dst <- chunk
+	}
 }
 
 func disconnectFromVoice(state *State) {
