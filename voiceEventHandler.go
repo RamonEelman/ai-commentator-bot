@@ -64,7 +64,10 @@ func disconnectFromVoice(state *State) {
 	if state.isConnected == false {
 		return
 	}
-	state.connection.Close()
+	err := state.connection.Disconnect()
+	if err != nil {
+		log.Fatal("Error disconnecting from voice chat")
+	}
 	state.isConnected = false
 }
 
