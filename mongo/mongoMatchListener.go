@@ -38,7 +38,7 @@ func StartChangeListener() <-chan string {
 }
 func watchChangeStream(ctx context.Context, changeStream *mongo.ChangeStream, channel chan<- string) {
 	defer changeStream.Close(ctx)
-	fmt.Println("Watching change stream")
+	log.Println("Watching change stream")
 
 	for changeStream.Next(ctx) {
 		var event struct {

@@ -17,9 +17,9 @@ var fakeYou = fakeyou.NewFakeYou(&configuration.Configuration{
 
 const trumpModel = "TM:djceg00wmcv5"
 
-func RunVoiceTTSTask(textChannel <-chan string) chan chan []byte {
+func RunVoiceTTSTask(textChannel <-chan string, chatChannel chan<- string) chan chan []byte {
 	voicesChannel := make(chan chan []byte)
-	go generateVoice(textChannel, voicesChannel)
+	go generateVoice(textChannel, voicesChannel, chatChannel)
 	return voicesChannel
 }
 
@@ -37,7 +37,7 @@ var settings = &dca.EncodeOptions{
 	StartTime:        0,
 }
 
-func generateVoice(textChannel <-chan string, voiceChannel chan<- chan []byte) {
+func generateVoice(textChannel <-chan string, voiceChannel chan<- chan []byte, chatChannel chan<- string) {
 	for {
 		text := <-textChannel
 		println(text)
@@ -56,6 +56,7 @@ func generateVoice(textChannel <-chan string, voiceChannel chan<- chan []byte) {
 				log.Println("Could not create audio session from reader", err)
 			}
 			currentTTSChannel := make(chan []byte, 100)
+			chatChannel <- text
 			voiceChannel <- currentTTSChannel
 			encoderToOpusCopy(encoderSession, currentTTSChannel)
 			reader.Close()

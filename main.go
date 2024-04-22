@@ -28,7 +28,8 @@ func main() {
 
 	matchSummaryChannel := mongo.StartChangeListener()
 	commentateResultChannel := chatgpt.StartChatGPTTask(matchSummaryChannel)
-	voiceChannel := RunVoiceTTSTask(commentateResultChannel)
+	chatSendChannel := RunChatSendTask(dg, config)
+	voiceChannel := RunVoiceTTSTask(commentateResultChannel, chatSendChannel)
 	eventChannel := RunVoiceEventHandler(dg, config)
 	RunVoiceConnectTask(dg, config, eventChannel)
 	RunVoiceSendTask(voiceChannel, eventChannel)
