@@ -23,7 +23,7 @@ func StartChatGPTTask(inputChannel <-chan string) <-chan string {
 			ctx := context.Background()
 			matchSummary := <-inputChannel
 			send, err := client.Send(ctx, &chatgpt.ChatCompletionRequest{
-				Model: chatgpt.GPT35Turbo16k,
+				Model: chatgpt.GPT4,
 				Messages: []chatgpt.ChatMessage{
 					{
 						Role:    chatgpt.ChatGPTModelRoleSystem,
